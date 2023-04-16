@@ -30,7 +30,7 @@ exports.signUpUser = async (req, res) => {
       password: hashedPassword,
     });
 
-    res.status(201).json(newUser);
+    res.status(201).json({ message: "Signed up successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
@@ -65,7 +65,7 @@ exports.logInUser = async (req, res) => {
     // Create and sign a JWT token
     const payload = { userId: user.id };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "3h",
     });
 
     // Set token as HttpOnly cookie
@@ -75,7 +75,7 @@ exports.logInUser = async (req, res) => {
     });
 
     // Return token to the client
-    return res.json({ message: "Logged in successfully" });
+    return res.json({ token, user, message: "Login successful." });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Server error" });
