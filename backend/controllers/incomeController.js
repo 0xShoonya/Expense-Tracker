@@ -10,7 +10,7 @@ exports.addIncome = async (req, res) => {
     }
 
     const income = await Income.create({ amount, category, date, description });
-    res.status(201).json({ message: "Income added" });
+    res.status(201).json({ income, message: "Income added" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to add income." });

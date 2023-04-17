@@ -3,8 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
-
-
 const Login = ({setToken}) => {
   
   const Navigate = useNavigate();
@@ -22,6 +20,8 @@ const Login = ({setToken}) => {
       console.log(response.data);
       const data = response.data;
       setToken(data);
+      
+
       setMessage(response.data.message);
 
       setTimeout(() => {

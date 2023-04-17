@@ -37,6 +37,13 @@ const Header = ({ handleLogout, user }) => {
             </li>
             {user && (
               <li className="nav-item">
+                <Link className="nav-link" to="/transactions">
+                  Transactions
+                </Link>
+              </li>
+            )}
+            {user && (
+              <li className="nav-item">
                 <Link className="nav-link" to="/dashboard">
                   Dashboard
                 </Link>
@@ -50,7 +57,7 @@ const Header = ({ handleLogout, user }) => {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <button className="btn btn-link" onClick={handleLogout}>
+                  <button className="nav-link" onClick={handleLogout}>
                     LOGOUT
                   </button>
                 </li>
