@@ -1,72 +1,133 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import Cookies from "js-cookie"
+import axios from "axios"
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  Select,
+  Button,
+  useToast,
+} from "@chakra-ui/react";
 
-function ExpenseForm(props) {
-  const [date, setDate] = useState("");
-  const [category, setCategory] = useState("food");
+const categories = [
+  "Food",
+  "Rent",
+  "Transportation",
+  "Miscellaneous",
+  "Others",
+];
+
+const ExpenseForm = () => {
+  const toast = useToast()
   const [amount, setAmount] = useState("");
+  const [date, setDate] = useState("");
+  const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    props.onSubmit({ date, category, amount, description });
-    setDate("");
-    setCategory("food");
-    setAmount("");
-    setDescription("");
+    const income = { amount, date, category, description };
+    try {
+      const token = Cookies.get('token'); // retrieve token from cookie
+      const response = await axios.post(
+        "http://localhost:3700/api/v1/add-expense",
+        income,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // include token in authorization header
+          },
+        }
+      );
+      if (response.status === 201) {
+        toast({
+          title: "Expense added.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        setAmount("");
+        setDate("");
+        setCategory("");
+        setDescription("");
+      } else {
+        toast({
+          title: "Error",
+          description: "An error occurred. Please try again later.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error occurred. Please try again later.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label>Date:</label>
-        <input
-          type="date"
-          className="form-control"
-          value={date}
-          onChange={(event) => setDate(event.target.value)}
-          required
-        />
-      </div>
-      <div className="form-group">
-        <label>Category:</label>
-        <select
-          className="form-control"
-          value={category}
-          onChange={(event) => setCategory(event.target.value)}
-          required
-        >
-          <option value="food">Food</option>
-          <option value="rent">Rent</option>
-          <option value="transportation">Transportation</option>
-          <option value="others">Others</option>
-          <option value="miscellaneous">Miscellaneous</option>
-        </select>
-      </div>
-      <div className="form-group">
-        <label>Amount:</label>
-        <input
-          type="number"
-          className="form-control"
-          value={amount}
-          onChange={(event) => setAmount(event.target.value)}
-          required
-        />
-      </div>
-      <div className="form-group">
-        <label>Description:</label>
-        <input
-          type="text"
-          className="form-control"
-          value={description}
-          onChange={(event) => setDescription(event.target.value)}
-          required
-        />
-      </div>
-      <button type="submit" className="btn btn-primary">
-        Add Expense
-      </button>
-    </form>
+    <Box>
+      <form onSubmit={handleSubmit}>
+        <FormControl id="amount" isRequired>
+          <FormLabel>Amount</FormLabel>
+          <Input
+            type="number"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="Enter amount"
+          />
+        </FormControl>
+
+        <FormControl id="date" isRequired mt={4}>
+          <FormLabel>Date</FormLabel>
+          <Input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+        </FormControl>
+
+        <FormControl id="category" isRequired mt={4}>
+          <FormLabel>Category</FormLabel>
+          <Select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            placeholder="Select category"
+          >
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl id="description" mt={4}>
+          <FormLabel>Description</FormLabel>
+          <Input
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Enter description"
+          />
+        </FormControl>
+
+        <Button 
+            type="submit" 
+            colorScheme="blue" 
+            mt={4}   
+            mx="auto"
+           display="block">
+          Add Expense
+        </Button>
+      </form>
+    </Box>
   );
-}
+};
 
 export default ExpenseForm;

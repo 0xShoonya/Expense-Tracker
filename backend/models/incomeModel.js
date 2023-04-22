@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../util/database");
+const User = require("./userModel");
 
 const Income = sequelize.define(
   "income",
@@ -10,35 +11,26 @@ const Income = sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
-    amount: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
-    },
-    category: {
-      type: DataTypes.STRING,
-    },
     date: {
       type: DataTypes.DATEONLY,
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
+    category: {
+      type: DataTypes.STRING,
+    },
+    amount: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+    },
     description: {
       type: DataTypes.TEXT,
     },
-    // Define foreign key to associate income with user
-    // userId: {
-    //   type: DataTypes.INTEGER,
-    //   allowNull: false,
-    // },
   },
   {
     timestamps: true,
-    underscored: true,
     freezeTableName: true,
   }
 );
-
-// Define association with User model
-// Income.belongsTo(User);
 
 module.exports = Income;

@@ -7,7 +7,8 @@ import Dashboard from "./Components/Dashboard/dashboard";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./Components/Header/header";
 import Home from "./Components/Home/home";
-import Transactions from "./Components/Transactions/transactions";
+// import Transaction from "./Components/Transactions/transaction";
+import TrackerPage from "./Components/Transactions/transaction";
 
 function App() {
   const [token, setToken] = useState(null);
@@ -42,16 +43,10 @@ function App() {
       <Router>
         <Header handleLogout={handleLogout} user={user} />
         <Routes>
-          <Route path="/transactions" element={<Transactions />} />
+          <Route path="/transactions" element={<TrackerPage />} />
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login setToken={handleSetToken} />} />
-          {/* <Route
-            path="/dashboard"
-            element={
-              token ? <Dashboard token={token} /> : <Navigate to="/login" />
-            }
-          /> */}
           <Route path="/dashboard" element={<Dashboard token={token} />} />
         </Routes>
       </Router>

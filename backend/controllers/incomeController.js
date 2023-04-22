@@ -2,24 +2,36 @@ const Income = require("../models/incomeModel");
 
 exports.addIncome = async (req, res) => {
   try {
-    const { amount, category, date, description } = req.body;
+    const { date, category, amount, description } = req.body;
 
     //validatons ...
     if (!amount || !category || !date || !description) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
-    const income = await Income.create({ amount, category, date, description });
-    res.status(201).json({ income, message: "Income added" });
+    const userId = req.user.dataValues.id;
+
+    const income = await Income.create({
+      amount,
+      date,
+      category,
+      description,
+      userId,
+    });
+    res.status(201).json({ income });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to add income." });
   }
 };
 
-exports.getIncomes = async (req, res) => {
+exports.getIncome = async (req, res) => {
   try {
+    const userId = req.user.dataValues.id;
     const income = await Income.findAll({
+      where: {
+        userId: userId,
+      },
       order: [["createdAt", "DESC"]],
     });
     res.status(200).json(income);

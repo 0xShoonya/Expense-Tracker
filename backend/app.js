@@ -22,6 +22,7 @@ app.use("/api/v1", transactionsRoutes);
 const PORT = process.env.PORT;
 
 sequelize
+  // .sync({ force: true })
   .sync()
   .then(() => {
     app.listen(PORT, () => {

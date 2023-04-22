@@ -3,24 +3,25 @@ const router = express.Router();
 
 const {
   addIncome,
-  getIncomes,
   deleteIncome,
+  getIncome,
 } = require("../controllers/incomeController");
 
 const {
   addExpense,
-  getExpenses,
   deleteExpense,
+  getExpense,
 } = require("../controllers/expenseControllers");
+const isAuthenticated = require("../middlewares/auth");
 
 router
-  .post("/add-income", addIncome)
-  .get("/get-incomes", getIncomes)
-  .delete("/delete-income/:id", deleteIncome);
+  .post("/add-income", isAuthenticated, addIncome)
+  .get("/get-income", isAuthenticated, getIncome)
+  .delete("/delete-income/:id", isAuthenticated, deleteIncome);
 
 router
-  .post("/add-expense", addExpense)
-  .get("/get-expenses", getExpenses)
-  .delete("/delete-expense/:id", deleteExpense);
+  .post("/add-expense", isAuthenticated, addExpense)
+  .get("/get-expense", isAuthenticated, getExpense)
+  .delete("/delete-expense/:id", isAuthenticated, deleteExpense);
 
 module.exports = router;

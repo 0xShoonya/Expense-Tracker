@@ -1,85 +1,133 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import Cookies from "js-cookie"
+import axios from "axios"
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  Select,
+  Button,
+  useToast,
+} from "@chakra-ui/react";
 
-const IncomeForm = ({ onSubmit }) => {
-  const [income, setIncome] = useState({
-    date: "",
-    category: "",
-    amount: "",
-    description: "",
-  });
+const categories = [
+  "Salary",
+  "Freelancing",
+  "Donation",
+  "Miscellaneous",
+  "Others",
+];
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setIncome((prevIncome) => ({ ...prevIncome, [name]: value }));
-  };
+const IncomeForm = () => {
+  const toast = useToast();
+  const [amount, setAmount] = useState("");
+  const [date, setDate] = useState("");
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    onSubmit(income);
-    setIncome({
-      date: "",
-      category: "",
-      amount: "",
-      description: "",
-    });
+    const income = { amount, date, category, description };
+    try {
+      const token = Cookies.get('token'); // retrieve token from cookie
+      const response = await axios.post(
+        "http://localhost:3700/api/v1/add-income",
+        income,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // include token in authorization header
+          },
+        }
+      );
+      if (response.status === 201) {
+        toast({
+          title: "Income added.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        setAmount("");
+        setDate("");
+        setCategory("");
+        setDescription("");
+      } else {
+        toast({
+          title: "Error",
+          description: "An error occurred. Please try again later.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error occurred. Please try again later.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label htmlFor="income-date">Date:</label>
-        <input
-          type="date"
-          id="income-date"
-          name="date"
-          value={income.date}
-          onChange={handleInputChange}
-          className="form-control"
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="income-category">Category:</label>
-        <select
-          id="income-category"
-          name="category"
-          value={income.category}
-          onChange={handleInputChange}
-          className="form-control"
+    <Box>
+      <form onSubmit={handleSubmit}>
+        <FormControl id="amount" isRequired>
+          <FormLabel>Amount</FormLabel>
+          <Input
+            type="number"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="Enter amount"
+          />
+        </FormControl>
+
+        <FormControl id="date" isRequired mt={4}>
+          <FormLabel>Date</FormLabel>
+          <Input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+        </FormControl>
+
+        <FormControl id="category" isRequired mt={4}>
+          <FormLabel >Category</FormLabel>
+          <Select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            placeholder="Select category"
+          >
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl id="description" mt={4}>
+          <FormLabel>Description</FormLabel>
+          <Input
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Enter description"
+          />
+        </FormControl>
+
+        <Button
+          type="submit"
+          colorScheme="blue"
+          mt={4}
+           mx="auto"
+           display="block"
         >
-          <option value="">-- Select Category --</option>
-          <option value="salary">Salary</option>
-          <option value="freelancing">Freelancing</option>
-          <option value="stocks">Stocks</option>
-          <option value="others">Others</option>
-          <option value="miscellaneous">Miscellaneous</option>
-        </select>
-      </div>
-      <div className="form-group">
-        <label htmlFor="income-amount">Amount:</label>
-        <input
-          type="number"
-          id="income-amount"
-          name="amount"
-          value={income.amount}
-          onChange={handleInputChange}
-          className="form-control"
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="income-description">Description:</label>
-        <input
-          type="text"
-          id="income-description"
-          name="description"
-          value={income.description}
-          onChange={handleInputChange}
-          className="form-control"
-        />
-      </div>
-      <button type="submit" className="btn btn-primary">
-        Add
-      </button>
-    </form>
+          Add Income
+        </Button>
+      </form>
+    </Box>
   );
 };
 

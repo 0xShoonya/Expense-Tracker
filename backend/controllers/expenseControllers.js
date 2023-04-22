@@ -9,22 +9,28 @@ exports.addExpense = async (req, res) => {
       return res.status(400).json({ message: "All fields are required." });
     }
 
+    const userId = req.user.dataValues.id;
     const expense = await Expense.create({
       amount,
       category,
       date,
       description,
+      userId,
     });
-    res.status(201).json({ message: "Expense added" });
+    res.status(201).json({ expense, message: "Expense added" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to add Expense." });
   }
 };
 
-exports.getExpenses = async (req, res) => {
+exports.getExpense = async (req, res) => {
   try {
+    const userId = req.user.dataValues.id;
     const expense = await Expense.findAll({
+      where: {
+        userId: userId,
+      },
       order: [["createdAt", "DESC"]],
     });
     res.status(200).json(expense);

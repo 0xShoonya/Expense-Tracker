@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const sequelize = new Sequelize(
-  "expensetracker",
+  "exp_tracker",
   "root",
   process.env.mysqlPassword,
   {

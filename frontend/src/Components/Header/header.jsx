@@ -8,8 +8,7 @@ import "./header.css"
 const Header = ({ handleLogout, user }) => {
 
     return (
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <Link className="navbar-brand" to="/">
+        <nav className="navbar navbar-expand-lg navbar-light" style={{ backgroundColor: 'transparent', boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.1)' }}>    <Link className="navbar-brand" to="/">
           Expense Tracker
         </Link>
         <button

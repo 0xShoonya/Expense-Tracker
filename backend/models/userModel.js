@@ -1,4 +1,4 @@
-const { DataTypes } = require("sequelize");
+const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../util/database");
 const Income = require("./incomeModel");
 const Expense = require("./expenseModel");
@@ -35,22 +35,14 @@ const User = sequelize.define(
   { freezeTableName: true }
 );
 
-User.hasMany(Expense, {
-  foreignKey: "userId",
-  onDelete: "CASCADE",
-});
-
-Expense.belongsTo(User, {
-  foreignKey: "userId",
-});
-
 User.hasMany(Income, {
   foreignKey: "userId",
   onDelete: "CASCADE",
 });
 
-Income.belongsTo(User, {
+User.hasMany(Expense, {
   foreignKey: "userId",
+  onDelete: "CASCADE",
 });
 
 module.exports = User;
