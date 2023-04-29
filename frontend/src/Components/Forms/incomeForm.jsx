@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Cookies from "js-cookie"
-import axios from "axios"
+import Cookies from "js-cookie";
+import axios from "axios";
 import {
   Box,
   FormControl,
@@ -30,7 +30,8 @@ const IncomeForm = () => {
     event.preventDefault();
     const income = { amount, date, category, description };
     try {
-      const token = Cookies.get('token'); // retrieve token from cookie
+      const token = Cookies.get("token"); // retrieve token from cookie
+      console.log(token);
       const response = await axios.post(
         "http://localhost:3700/api/v1/add-income",
         income,
@@ -40,6 +41,7 @@ const IncomeForm = () => {
           },
         }
       );
+      console.log(response);
       if (response.status === 201) {
         toast({
           title: "Income added.",
@@ -94,7 +96,7 @@ const IncomeForm = () => {
         </FormControl>
 
         <FormControl id="category" isRequired mt={4}>
-          <FormLabel >Category</FormLabel>
+          <FormLabel>Category</FormLabel>
           <Select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
@@ -121,8 +123,8 @@ const IncomeForm = () => {
           type="submit"
           colorScheme="blue"
           mt={4}
-           mx="auto"
-           display="block"
+          mx="auto"
+          display="block"
         >
           Add Income
         </Button>

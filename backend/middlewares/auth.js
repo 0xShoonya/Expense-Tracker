@@ -1,8 +1,5 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
-const dotenv = require("dotenv");
-
-dotenv.config();
 
 const isAuthenticated = async (req, res, next) => {
   try {
@@ -29,7 +26,7 @@ const isAuthenticated = async (req, res, next) => {
 
     // Attach the user object to the request object for further use
     req.user = user;
-    console.log("req.User", req.user);
+    // console.log("req.User", req.user);
 
     next();
   } catch (error) {

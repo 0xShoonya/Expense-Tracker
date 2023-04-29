@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const crypto = require("crypto");
 const sendMail = require("../util/sendMail");
 
+
 dotenv.config();
 
 //signup user
@@ -81,6 +82,7 @@ exports.logInUser = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
 
 //log out user
 exports.logOutUser = async (req, res) => {

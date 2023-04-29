@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Cookies from "js-cookie";
 import Signup from "./Components/Signup/signup";
 import Login from "./Components/Login/login";
-import Dashboard from "./Components/Dashboard/dashboard";
+import Dashboard from "./Components/Dashboard/dashboards";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./Components/Header/header";
 import Home from "./Components/Home/home";

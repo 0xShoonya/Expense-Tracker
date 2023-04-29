@@ -13,7 +13,7 @@ import ExpenseForm from "../Forms/expenseForm";
 import ExpenseTable from "../Tables/expenseTable";
 import IncomeTable from "../Tables/incomeTable";
 
-const TrackerPage = () => {
+const TrackerPage = ({handleDelete}) => {
   const toast = useToast();
   const [selectedTable, setSelectedTable] = useState("income");
   const [currentPage, setCurrentPage] = useState(1);
@@ -65,7 +65,7 @@ const TrackerPage = () => {
           Show Expense Table
         </Button>
         {selectedTable === "income" ? (
-          <IncomeTable toast={toast} currentPage={currentPage} setCurrentPage= {setCurrentPage} itemsPerPage={5}/>
+          <IncomeTable toast={toast} currentPage={currentPage} setCurrentPage= {setCurrentPage} itemsPerPage={5} />
         ) : (
           <ExpenseTable toast={toast} currentPage={currentPage}/>
         )}

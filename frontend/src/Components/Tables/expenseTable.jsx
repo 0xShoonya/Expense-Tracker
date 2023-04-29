@@ -14,39 +14,70 @@ import Cookies from "js-cookie";
 import axios from "axios";
 
 const ExpenseTable = ({ handleDelete, handleEdit }) => {
-const [expenseData, setExpenseData] = useState([]);
+  const [expenseData, setExpenseData] = useState([]);
   const toast = useToast();
 
- const getUserExpense = async () => {
-  try {
-    const token = Cookies.get('token'); // retrieve token from cookie
-    const response = await axios.get(`http://localhost:3700/api/v1/get-expense`, {
-      headers: {
-        Authorization: `Bearer ${token}`, // include token in authorization header
-      },
-    });
-    console.log(response.data)
-    setExpenseData(response.data);
-    
-  } catch (error) {
-    console.error(error);
-  }
-};
+  const getUserExpense = async () => {
+    try {
+      const token = Cookies.get("token"); // retrieve token from cookie
+      const response = await axios.get(
+        `http://localhost:3700/api/v1/get-expense`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // include token in authorization header
+          },
+        }
+      );
+      console.log(response.data);
+      setExpenseData(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
- useEffect(() => {
+  useEffect(() => {
     getUserExpense();
   }, []);
 
-  const handleDeleteClick = (id) => {
-    handleDelete(id);
-    toast({
-      title: "Expense deleted",
-      status: "success",
-      duration: 2000,
-      isClosable: true,
-    });
+  handleDelete = async (id) => {
+    try {
+      const token = Cookies.get("token");
+      await axios.delete(`http://localhost:3700/api/v1/delete-expense/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setExpenseData(expenseData.filter((item) => item.id !== id));
+      toast({
+        title: "Expense deleted",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error deleting expense",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+    }
   };
 
+  const handleDeleteClick = async (id) => {
+    try {
+      await handleDelete(id);
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error deleting income",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+    }
+  };
   return (
     <Table variant="simple">
       <Thead>
